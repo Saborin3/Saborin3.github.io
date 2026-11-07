@@ -9,103 +9,133 @@
 <meta property="og:description" content="saborin が制作したゲーム・システムの紹介ページ">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://saborin3.github.io/">
+<script>
+  // ハイコントラストの設定を、描画の前に反映する(一瞬ふつうの色が見えないように)
+  try { if (localStorage.getItem('saborin_hc') === '1') document.documentElement.dataset.contrast = 'high'; } catch (e) {}
+</script>
 <style>
+  /* 色はすべて、文字と背景のコントラスト比 7:1 以上(WCAG AAA)、
+     カードの枠やボタンのふちなど文字以外は 3:1 以上になるようにしている */
   :root {
     --bg: #f6f4ef;
     --surface: #ffffff;
-    --text: #1d1f24;
-    --muted: #5a5f6b;
-    --line: #dedad0;
-    --accent: #2f5bd3;
+    --text: #1d1f24;      /* 白地で 16.5:1 */
+    --muted: #4a4f5a;     /* 白地で 8.2:1 */
+    --line: #857f72;      /* 枠線 3.6:1 以上 */
+    --accent: #2448b8;    /* 白地で 7.8:1 */
     --accent-ink: #ffffff;
-    --tag-bg: #eef1fb;
-    --tag-ink: #2a3f86;
+    --tag-bg: #e6ebfa;
+    --tag-ink: #1f3477;   /* 9.7:1 */
+    --focus: #1d1f24;
     --shadow: 0 1px 2px rgba(0,0,0,.05), 0 6px 20px rgba(0,0,0,.06);
   }
   @media (prefers-color-scheme: dark) {
-    :root {
+    :root:not([data-contrast="high"]) {
       --bg: #14161b;
       --surface: #1d2027;
-      --text: #eceef2;
-      --muted: #a6acb8;
-      --line: #2e323b;
-      --accent: #7d9cff;
-      --accent-ink: #0f1320;
-      --tag-bg: #252b3d;
-      --tag-ink: #c3d0ff;
+      --text: #eef0f4;    /* 14.3:1 */
+      --muted: #b8bec9;   /* 8.7:1 */
+      --line: #6b7180;    /* 3.3:1 以上 */
+      --accent: #9fb6ff;  /* 8.2:1 */
+      --accent-ink: #0b0f1c;
+      --tag-bg: #262d42;
+      --tag-ink: #d4ddff; /* 10.1:1 */
+      --focus: #ffffff;
       --shadow: none;
     }
   }
+  /* ハイコントラスト(ボタンで切りかえ、または OS の「コントラストを上げる」):黒地に白・黄色・水色だけ */
+  :root[data-contrast="high"] {
+    --bg: #000000; --surface: #000000; --text: #ffffff; --muted: #ffffff; --line: #ffffff;
+    --accent: #ffff00; --accent-ink: #000000; --tag-bg: #000000; --tag-ink: #ffffff; --focus: #00ffff; --shadow: none;
+  }
+  @media (prefers-contrast: more) {
+    :root:not([data-contrast="normal"]) {
+      --bg: #000000; --surface: #000000; --text: #ffffff; --muted: #ffffff; --line: #ffffff;
+      --accent: #ffff00; --accent-ink: #000000; --tag-bg: #000000; --tag-ink: #ffffff; --focus: #00ffff; --shadow: none;
+    }
+  }
+
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
   body {
     margin: 0;
     background: var(--bg);
     color: var(--text);
-    font-family: "Hiragino Sans", "Noto Sans JP", "Yu Gothic UI", "Meiryo", system-ui, sans-serif;
-    line-height: 1.75;
-    font-size: 1rem;
+    font-family: "BIZ UDPGothic", "Hiragino Sans", "Noto Sans JP", "Yu Gothic UI", "Meiryo", system-ui, sans-serif;
+    line-height: 1.8;
+    font-size: 1.0625rem;
   }
   .wrap { max-width: 880px; margin: 0 auto; padding: 0 16px; }
 
   .skip {
     position: absolute; left: -9999px; top: 0;
-    background: var(--accent); color: var(--accent-ink); padding: 8px 12px;
+    background: var(--accent); color: var(--accent-ink); padding: 8px 12px; font-weight: 700;
   }
   .skip:focus { left: 8px; top: 8px; z-index: 10; }
 
-  header { padding: 56px 0 32px; }
-  .hello { color: var(--muted); font-size: .95rem; margin: 0 0 4px; }
+  .topbar { display: flex; justify-content: flex-end; padding-top: 16px; }
+  .contrast-btn {
+    font: inherit; font-size: .95rem; font-weight: 700; cursor: pointer;
+    padding: 8px 14px; border-radius: 999px; min-height: 44px;
+    background: var(--surface); color: var(--text); border: 2px solid var(--line);
+  }
+  .contrast-btn[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+
+  header { padding: 24px 0 32px; }
+  .hello { color: var(--muted); font-size: 1rem; margin: 0 0 4px; }
   h1 { font-size: clamp(2rem, 7vw, 3rem); line-height: 1.2; margin: 0 0 12px; letter-spacing: .01em; }
   h1 .dot { color: var(--accent); }
   .lead { margin: 0; max-width: 40em; }
   .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; padding: 0; list-style: none; }
 
-  a { color: var(--accent); }
-  a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+  a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+  a:focus-visible, button:focus-visible { outline: 4px solid var(--focus); outline-offset: 3px; border-radius: 8px; }
 
   .btn {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 10px 16px; border-radius: 999px;
-    font-weight: 700; text-decoration: none; font-size: .95rem;
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    min-height: 44px; padding: 10px 18px; border-radius: 999px;
+    font-weight: 700; text-decoration: none; font-size: 1rem;
     border: 2px solid var(--accent);
   }
   .btn.primary { background: var(--accent); color: var(--accent-ink); }
-  .btn.ghost { background: transparent; color: var(--accent); }
-  .btn:hover { filter: brightness(1.08); }
+  .btn.ghost { background: var(--surface); color: var(--accent); }
+  .btn:hover { text-decoration: underline; text-underline-offset: 3px; }
 
-  main h2 { font-size: 1.35rem; margin: 24px 0 16px; }
+  main h2 { font-size: 1.4rem; margin: 24px 0 16px; }
   .grid { display: grid; gap: 18px; grid-template-columns: 1fr; padding: 0; margin: 0; list-style: none; }
   @media (min-width: 680px) { .grid { grid-template-columns: 1fr 1fr; } }
 
   .card {
     background: var(--surface);
-    border: 1px solid var(--line);
+    border: 2px solid var(--line);
     border-radius: 16px;
     padding: 22px;
     box-shadow: var(--shadow);
     display: flex; flex-direction: column;
   }
   .card .emoji { font-size: 2rem; line-height: 1; margin-bottom: 10px; }
-  .card h3 { margin: 0; font-size: 1.25rem; }
-  .card .sub { margin: 2px 0 10px; color: var(--muted); font-size: .9rem; }
+  .card h3 { margin: 0; font-size: 1.3rem; }
+  .card .sub { margin: 2px 0 10px; color: var(--muted); font-size: .95rem; font-weight: 700; }
   .card p.desc { margin: 0 0 12px; }
   .tags { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 0 0 16px; list-style: none; }
-  .tags li { background: var(--tag-bg); color: var(--tag-ink); font-size: .8rem; padding: 2px 10px; border-radius: 999px; }
+  .tags li { background: var(--tag-bg); color: var(--tag-ink); font-size: .875rem; font-weight: 700; padding: 2px 10px; border-radius: 999px; border: 1px solid var(--tag-ink); }
   .card .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; }
 
   .soon {
     border: 2px dashed var(--line); border-radius: 16px; padding: 22px;
     color: var(--muted); display: flex; align-items: center; justify-content: center; text-align: center; min-height: 140px;
   }
+  .soon p { margin: 0; font-weight: 700; }
 
-  footer { margin: 48px 0 32px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
+  footer { margin: 48px 0 32px; padding-top: 20px; border-top: 2px solid var(--line); color: var(--muted); font-size: .95rem; }
 
-  /* Windowsのハイコントラスト等(強制カラー)対応 */
+  /* Windows のハイコントラスト(強制カラー):システムの色に任せて、枠と下線で区別する */
   @media (forced-colors: active) {
-    .card, .soon, .btn { border: 2px solid CanvasText; }
-    .btn.primary { background: ButtonText; color: ButtonFace; forced-color-adjust: none; }
-    .tags li { border: 1px solid CanvasText; }
+    .card, .soon, .btn, .contrast-btn, .tags li { border-color: CanvasText; }
+    .btn.primary { forced-color-adjust: none; background: ButtonText; color: ButtonFace; border-color: ButtonText; }
+    .contrast-btn[aria-pressed="true"] { border-width: 4px; }
+    a:focus-visible, button:focus-visible { outline-color: Highlight; }
   }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
@@ -114,6 +144,9 @@
 <a class="skip" href="#works">作品一覧へスキップ</a>
 
 <div class="wrap">
+  <div class="topbar">
+    <button class="contrast-btn" id="contrastBtn" aria-pressed="false">◐ ハイコントラスト</button>
+  </div>
   <header>
     <p class="hello">ようこそ!</p>
     <h1>saborin<span class="dot" aria-hidden="true">.</span></h1>
@@ -127,7 +160,7 @@
     </ul>
   </header>
 
-  <main id="works">
+  <main id="works" tabindex="-1">
     <h2>つくったもの</h2>
     <ul class="grid" id="list"></ul>
     <noscript><p>作品一覧の表示にはJavaScriptが必要です。直接リンク:
@@ -183,6 +216,21 @@ list.innerHTML = WORKS.map(w => `
   <li class="soon"><p>次の作品、制作中…</p></li>`;
 
 document.getElementById("year").textContent = new Date().getFullYear();
+
+// ハイコントラストの切りかえ(この端末に覚えておく)
+// OS で「コントラストを上げる」にしている人は最初からハイコントラスト。ボタンで元にも戻せる
+const root = document.documentElement, btn = document.getElementById("contrastBtn");
+const osMore = window.matchMedia && matchMedia("(prefers-contrast: more)").matches;
+function isHigh() { return root.dataset.contrast === "high" || (osMore && root.dataset.contrast !== "normal"); }
+function refresh() { btn.setAttribute("aria-pressed", String(isHigh())); }
+btn.addEventListener("click", () => {
+  const on = !isHigh();
+  root.dataset.contrast = on ? "high" : "normal";
+  try { localStorage.setItem("saborin_hc", on ? "1" : "0"); } catch (e) {}
+  refresh();
+});
+try { if (localStorage.getItem("saborin_hc") === "0") root.dataset.contrast = "normal"; } catch (e) {}
+refresh();
 </script>
 </body>
 </html>
