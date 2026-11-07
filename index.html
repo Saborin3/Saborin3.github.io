@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>saborin のつくったもの</title>
+<meta name="description" content="saborin が制作したゲーム・システムの紹介ページ。アイクエ、そらブラなど。">
+<meta property="og:title" content="saborin のつくったもの">
+<meta property="og:description" content="saborin が制作したゲーム・システムの紹介ページ">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://saborin3.github.io/">
+<style>
+  :root {
+    --bg: #f6f4ef;
+    --surface: #ffffff;
+    --text: #1d1f24;
+    --muted: #5a5f6b;
+    --line: #dedad0;
+    --accent: #2f5bd3;
+    --accent-ink: #ffffff;
+    --tag-bg: #eef1fb;
+    --tag-ink: #2a3f86;
+    --shadow: 0 1px 2px rgba(0,0,0,.05), 0 6px 20px rgba(0,0,0,.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14161b;
+      --surface: #1d2027;
+      --text: #eceef2;
+      --muted: #a6acb8;
+      --line: #2e323b;
+      --accent: #7d9cff;
+      --accent-ink: #0f1320;
+      --tag-bg: #252b3d;
+      --tag-ink: #c3d0ff;
+      --shadow: none;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Hiragino Sans", "Noto Sans JP", "Yu Gothic UI", "Meiryo", system-ui, sans-serif;
+    line-height: 1.75;
+    font-size: 1rem;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 16px; }
+
+  .skip {
+    position: absolute; left: -9999px; top: 0;
+    background: var(--accent); color: var(--accent-ink); padding: 8px 12px;
+  }
+  .skip:focus { left: 8px; top: 8px; z-index: 10; }
+
+  header { padding: 56px 0 32px; }
+  .hello { color: var(--muted); font-size: .95rem; margin: 0 0 4px; }
+  h1 { font-size: clamp(2rem, 7vw, 3rem); line-height: 1.2; margin: 0 0 12px; letter-spacing: .01em; }
+  h1 .dot { color: var(--accent); }
+  .lead { margin: 0; max-width: 40em; }
+  .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; padding: 0; list-style: none; }
+
+  a { color: var(--accent); }
+  a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 10px 16px; border-radius: 999px;
+    font-weight: 700; text-decoration: none; font-size: .95rem;
+    border: 2px solid var(--accent);
+  }
+  .btn.primary { background: var(--accent); color: var(--accent-ink); }
+  .btn.ghost { background: transparent; color: var(--accent); }
+  .btn:hover { filter: brightness(1.08); }
+
+  main h2 { font-size: 1.35rem; margin: 24px 0 16px; }
+  .grid { display: grid; gap: 18px; grid-template-columns: 1fr; padding: 0; margin: 0; list-style: none; }
+  @media (min-width: 680px) { .grid { grid-template-columns: 1fr 1fr; } }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: var(--shadow);
+    display: flex; flex-direction: column;
+  }
+  .card .emoji { font-size: 2rem; line-height: 1; margin-bottom: 10px; }
+  .card h3 { margin: 0; font-size: 1.25rem; }
+  .card .sub { margin: 2px 0 10px; color: var(--muted); font-size: .9rem; }
+  .card p.desc { margin: 0 0 12px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 0 0 16px; list-style: none; }
+  .tags li { background: var(--tag-bg); color: var(--tag-ink); font-size: .8rem; padding: 2px 10px; border-radius: 999px; }
+  .card .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; }
+
+  .soon {
+    border: 2px dashed var(--line); border-radius: 16px; padding: 22px;
+    color: var(--muted); display: flex; align-items: center; justify-content: center; text-align: center; min-height: 140px;
+  }
+
+  footer { margin: 48px 0 32px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
+
+  /* Windowsのハイコントラスト等(強制カラー)対応 */
+  @media (forced-colors: active) {
+    .card, .soon, .btn { border: 2px solid CanvasText; }
+    .btn.primary { background: ButtonText; color: ButtonFace; forced-color-adjust: none; }
+    .tags li { border: 1px solid CanvasText; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#works">作品一覧へスキップ</a>
+
+<div class="wrap">
+  <header>
+    <p class="hello">ようこそ!</p>
+    <h1>saborin<span class="dot" aria-hidden="true">.</span></h1>
+    <p class="lead">
+      ゲームやシステムを作っている学生です。
+      誰でも遊べること(目や耳が不自由な人も含めて)を大事にして作っています。
+      ブラウザでそのまま遊べるので、ぜひ触ってみてください。
+    </p>
+    <ul class="links">
+      <li><a class="btn ghost" href="https://github.com/Saborin3">GitHub(Saborin3)</a></li>
+    </ul>
+  </header>
+
+  <main id="works">
+    <h2>つくったもの</h2>
+    <ul class="grid" id="list"></ul>
+    <noscript><p>作品一覧の表示にはJavaScriptが必要です。直接リンク:
+      <a href="https://saborin3.github.io/aiquest/">アイクエ</a> /
+      <a href="https://saborin3.github.io/sorabura/">そらブラ</a></p></noscript>
+  </main>
+
+  <footer>
+    <p>© <span id="year">2026</span> saborin</p>
+  </footer>
+</div>
+
+<script>
+// ===== 作品を増やすときはここに1つ追加するだけ =====
+// play: 遊べるURL / repo: GitHubリポジトリ(なければ省略可)
+const WORKS = [
+  {
+    emoji: "💼",
+    name: "アイクエ",
+    sub: "3Dアクションゲーム",
+    desc: "スーツ姿の新社会人が、AIのアイコンを投げて「課題」「レポート」ブロックの敵を倒していく3Dアクション。ゲストでもすぐ遊べて、オンラインランキングで全国のプレイヤーと競えます。",
+    tags: ["ブラウザ", "スマホ/PC", "オンラインランキング"],
+    play: "https://saborin3.github.io/aiquest/",
+    repo: "https://github.com/Saborin3/aiquest"
+  },
+  {
+    emoji: "🎪",
+    name: "そらブラ",
+    sub: "空中ブランコ タイミングゲーム",
+    desc: "棒人間を空中ブランコで左から右へ飛ばすタイミングゲーム。タイミングは音とイラストの両方でわかるので、目や耳が不自由な人も遊べます。ぴったりで飛ぶとクリティカル!半月ごとにランキングが更新されます。",
+    tags: ["ブラウザ", "音でも遊べる", "ハイコントラスト対応", "ランキング"],
+    play: "https://saborin3.github.io/sorabura/",
+    repo: "https://github.com/Saborin3/sorabura"
+  },
+];
+// ==================================================
+
+const list = document.getElementById("list");
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+
+list.innerHTML = WORKS.map(w => `
+  <li class="card">
+    <div class="emoji" aria-hidden="true">${esc(w.emoji || "🎮")}</div>
+    <h3>${esc(w.name)}</h3>
+    <p class="sub">${esc(w.sub || "")}</p>
+    <p class="desc">${esc(w.desc)}</p>
+    ${w.tags && w.tags.length ? `<ul class="tags" aria-label="特徴">${w.tags.map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : ""}
+    <div class="actions">
+      ${w.play ? `<a class="btn primary" href="${esc(w.play)}">${esc(w.name)}で遊ぶ</a>` : ""}
+      ${w.repo ? `<a class="btn ghost" href="${esc(w.repo)}">${esc(w.name)}のソース</a>` : ""}
+    </div>
+  </li>`).join("") + `
+  <li class="soon"><p>次の作品、制作中…</p></li>`;
+
+document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
